@@ -2,6 +2,7 @@ package Classes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 // Interface para empréstimos e devoluções
 interface BibliotecaInterface {
@@ -198,6 +199,7 @@ class Main {
     public static void main(String[] args) {
         // Inicialização da biblioteca
         Biblioteca biblioteca = new Biblioteca();
+        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Bem-vindo à Biblioteca!");
 
@@ -229,5 +231,101 @@ class Main {
         // Impressão das informações da biblioteca
         System.out.println(biblioteca.toString());
         Status.imprimirStatus(biblioteca);
+
+        while (true) {
+            exibirMenu();
+            int escolha = scanner.nextInt();
+            scanner.nextLine(); // Limpa o buffer do scanner
+
+            switch (escolha) {
+                case 1:
+                    realizarEmprestimo(biblioteca, scanner);
+                    break;
+                case 2:
+                    realizarDevolucao(biblioteca, scanner);
+                    break;
+                case 3:
+                    Status.imprimirStatus(biblioteca);
+                    break;
+                case 4:
+                    System.out.println("Saindo do programa. Até mais!");
+                    System.exit(0);
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
     }
-}
+
+    private static void exibirMenu() {
+        System.out.println("\n===== Menu =====");
+        System.out.println("1. Realizar Empréstimo");
+        System.out.println("2. Realizar Devolução");
+        System.out.println("3. Exibir Status da Biblioteca");
+        System.out.println("4. Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    private static void realizarEmprestimo(Biblioteca biblioteca, Scanner scanner) {
+        System.out.println("\n===== Realizar Empréstimo =====");
+
+        System.out.print("Digite o nome do livro: ");
+        String tituloLivro = scanner.nextLine();
+
+        System.out.print("Digite o nome do membro da biblioteca: ");
+        String nomeMembro = scanner.nextLine();
+
+        Livro livro = buscarLivroPorTitulo(biblioteca, tituloLivro);
+        MembroBiblioteca membro = buscarMembroPorNome(biblioteca, nomeMembro);
+
+        if (livro != null && membro != null) {
+            if (biblioteca.fazerEmprestimo(livro, membro)) {
+                System.out.println("Empréstimo realizado com sucesso!");
+            } else {
+                System.out.println("Não foi possível realizar o empréstimo.");
+            }
+        } else {
+            System.out.println("Livro ou membro não encontrado.");
+        }
+    }
+
+    private static void realizarDevolucao(Biblioteca biblioteca, Scanner scanner) {
+        System.out.println("\n===== Realizar Devolução =====");
+
+        System.out.print("Digite o nome do livro a ser devolvido: ");
+        String tituloLivro = scanner.nextLine();
+
+        System.out.print("Digite o nome do membro da biblioteca que está devolvendo: ");
+        String nomeMembro = scanner.nextLine();
+
+        Livro livro = buscarLivroPorTitulo(biblioteca, tituloLivro);
+        MembroBiblioteca membro = buscarMembroPorNome(biblioteca, nomeMembro);
+
+        if (livro != null && membro != null) {
+            if (biblioteca.fazerDevolucao(livro, membro)) {
+                System.out.println("Devolução realizada com sucesso!");
+            } else {
+                System.out.println("Não foi possível realizar a devolução.");
+            }
+        } else {
+            System.out.println("Livro ou membro não encontrado.");
+        }
+    }
+
+    private static Livro buscarLivroPorTitulo(Biblioteca biblioteca, String titulo) {
+        for (Livro livro : biblioteca.getLivrosDisponiveis()) {
+            if (livro.getTitulo().equalsIgnoreCase(titulo)) {
+                return livro;
+            }
+        }
+        return null;
+    }
+
+    private static MembroBiblioteca buscarMembroPorNome(Biblioteca biblioteca, String nome) {
+        for (MembroBiblioteca membro : biblioteca.getMembros()) {
+            if (membro.getNome().equalsIgnoreCase(nome)) {
+                return membro;
+            }
+        }
+        return null;
+    }
+    }
