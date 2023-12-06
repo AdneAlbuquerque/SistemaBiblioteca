@@ -2,7 +2,6 @@ package Classes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 // Interface para empréstimos e devoluções
 interface BibliotecaInterface {
@@ -102,6 +101,18 @@ class Biblioteca implements BibliotecaInterface {
         this.emprestimos = new ArrayList<>();
     }
 
+    public List<Livro> getLivrosDisponiveis() {
+        return livrosDisponiveis;
+    }
+    
+    public List<MembroBiblioteca> getMembros() {
+        return membros;
+    }
+    
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
+    }
+
     public void adicionarLivro(Livro livro) {
         livrosDisponiveis.add(livro);
     }
@@ -161,15 +172,32 @@ class Emprestimo {
         return "Empréstimo: " + livro.toString() + " para " + membro.toString();
     }
 }
+class Status {
+    public static void imprimirStatus(Biblioteca biblioteca) {
+        System.out.println("===== Status da Biblioteca =====");
+        System.out.println("Livros Disponíveis:");
+        for (Livro livro : biblioteca.getLivrosDisponiveis()) {
+            System.out.println("- " + livro.toString());
+        }
+
+        System.out.println("\nMembros da Biblioteca:");
+        for (MembroBiblioteca membro : biblioteca.getMembros()) {
+            System.out.println("- " + membro.toString());
+        }
+
+        System.out.println("\nLivros Emprestados:");
+        for (Emprestimo emprestimo : biblioteca.getEmprestimos()) {
+            System.out.println("- " + emprestimo.toString());
+        }
+        System.out.println("===============================");
+    }
+}
 
 // Classe principal para o exemplo de uso
 class Main {
     public static void main(String[] args) {
         // Inicialização da biblioteca
         Biblioteca biblioteca = new Biblioteca();
-
-        // Entrada de dados do usuário usando Scanner
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Bem-vindo à Biblioteca!");
 
@@ -200,5 +228,6 @@ class Main {
 
         // Impressão das informações da biblioteca
         System.out.println(biblioteca.toString());
+        Status.imprimirStatus(biblioteca);
     }
 }
